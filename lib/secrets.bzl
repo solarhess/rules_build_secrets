@@ -25,6 +25,11 @@ def _environment_secrets_impl(repository_ctx):
         if value == "" and failOnEmpty:
             fail("Empty value for environment variable "+key)
         
+
+        # Escape quotes and backslashes
+        value = value.replace("\\","\\\\")
+        value = value.replace("\"","\\\"")
+
         line = "{0}=\"{1}\"".format(key, value)
         print("Loading environment var secret "+line)
         lines.append(line)
@@ -39,7 +44,7 @@ def _environment_secrets_impl(repository_ctx):
 """
 Explicitly import secrets from the environment into the workspace
 
-    my_rule = environment_secrets(
+    environment_secrets(
         name="env", 
         keys=[
             "MAVEN_REPO_USER",
@@ -56,7 +61,7 @@ Then in build scripts you can reference these by importing a custom bzl file.
 
     #
     sample_rule(
-        arg='maven_user='+MAVEN_REPO_USER)
+        arg=MAVEN_REPO_USER)
 
 """
 def environment_secrets( name, keys): 
