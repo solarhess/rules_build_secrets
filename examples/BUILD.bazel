@@ -1,0 +1,11 @@
+# Import a secret into the local BUILD.bazel environment
+load("@env//:secrets.bzl","MAVEN_USER", "MAVEN_PASS")
+
+#
+genrule(
+    name = "secret_file",
+    srcs = [],
+    outs = ["secret.txt"],
+    #cmd = "echo OK > \"$@\"",
+    cmd = "echo 'MAVEN_USER={0} MAVEN_PASS={1}'> \"$@\"".format(MAVEN_USER,MAVEN_PASS),
+)
