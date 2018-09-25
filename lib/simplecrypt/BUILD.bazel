@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "gazelle", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["simplecrypt.go"],
+    visibility = ["//visibility:private"],
+)
+
+# This is the binary you can run on the local platform
+go_binary(
+    name = "simplecrypt",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+# This is the cross-compiled binary for linux
+go_binary(
+    name = "render_linux_amd64",
+    embed = [":go_default_library"],
+    goarch = "amd64",
+    goos = "linux",
+    pure = "on",
+    x_defs = {
+        "stash.hybris.com/scm/model-t/datahub/dhc/app.Version": "{STABLE_GIT_COMMIT}",
+    },
+    visibility = ["//visibility:public"],
+)

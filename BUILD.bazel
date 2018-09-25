@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "gazelle", "go_prefix")
+
+PREFIX = "github.com/solarhess/rules_build_secrets"
+
+gazelle(
+    name = "gazelle",
+    args = [
+        "-build_file_name",
+        "BUILD,BUILD.bazel",
+    ],
+    command = "fix",
+    prefix = PREFIX,
+)
+
+go_prefix(
+    prefix = PREFIX,
+)
