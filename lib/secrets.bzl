@@ -1,7 +1,7 @@
 BUILD_BZL_CONTENTS='''
 filegroup(
     name="secrets",
-    srcs=["secrets.bzl"],
+    srcs=["secrets.bzl", "secrets.json"],
     visibility=["//visibility:public"]
 )
 '''
@@ -15,6 +15,7 @@ def _environment_secrets_impl(repository_ctx):
 
     lines = ["# Generated - do not modify"]
     missing = []
+    secrets = {}
 
     for key, defaultValue in entries.items():
         value = env.get(key, UNSET_VALUE)
@@ -27,15 +28,17 @@ def _environment_secrets_impl(repository_ctx):
         value = value.replace("\\","\\\\")
         value = value.replace("\"","\\\"")
 
-        line = "{0}=\"{1}\"".format(key, value)
+        secrets[key] = value
+        line = '{0}="{1}"'.format(key, value)
         lines.append(line)
 
     if len(missing) > 0 : 
         fail("Required Secret environment variables were empty: "+ (",".join(missing)) ) 
 
-    secrets_file = "\n".join(lines)
+    secrets_file = "\n".join(lines) + "\n"
 
     repository_ctx.file("secrets.bzl", secrets_file)
+    repository_ctx.file("secrets.json", struct(**secrets).to_json())
     repository_ctx.file("BUILD.bazel", BUILD_BZL_CONTENTS)
 
 
