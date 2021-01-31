@@ -20,6 +20,16 @@ be used as the default.
 WORKSPACE:
 
 ```python 
+    load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+    git_repository(
+        name = "com_github_solarhess_rules_build_secrets",
+        remote = "http://github.com/solarhess/rules_build_secrets",
+        commit = "103b222eba64355b93649b06ecfe3844466b5a65",  # update as necessary
+    )
+
+    load("@com_github_solarhess_rules_build_secrets//lib:secrets.bzl", "environment_secrets")
+
     environment_secrets(
         name="env", 
         entries = {
