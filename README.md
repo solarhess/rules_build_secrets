@@ -13,7 +13,7 @@ them into the works.
 
 Explicitly import secrets from the environment into the workspace. The 'entries'
 is a string -> string key/value mapping such that the key is the name of the
-environment variable to import.  If the value is the special token '<REQUIRED>'
+environment variable to import.  If the value is the special token `<REQUIRED>`
 the build will fail if the variable is unset or empty.  Otherwise the value will
 be used as the default.
 
