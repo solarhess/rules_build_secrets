@@ -1,10 +1,9 @@
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
-load("@rules_build_secret//lib:secrets.bzl","environment_secrets")
+load("@rules_build_secrets//lib:secrets.bzl","environment_secrets")
 
 def _impl(ctx):
     module = ctx.modules[0]
     options = module.tags.options
-    print(options[0].entries)
     maybe(
         environment_secrets,
         name = options[0].name,
@@ -20,7 +19,7 @@ options = tag_class(attrs={
     }),
 })
 
-rules_build_secret = module_extension(
+rules_build_secrets = module_extension(
     implementation = _impl,
     tag_classes = {"options": options},
 )
