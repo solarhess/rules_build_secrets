@@ -10,13 +10,14 @@ UNSET_VALUE = "______UNSET______"
 REQUIRED_VALUE = "<REQUIRED>"
 
 def _environment_secrets_impl(repository_ctx):
+    env = repository_ctx.os.environ
     entries = repository_ctx.attr.entries
 
     lines = ["# Generated - do not modify"]
     missing = []
 
     for key, defaultValue in entries.items():
-        value = entries.get(key, UNSET_VALUE)
+        value = env.get(key, UNSET_VALUE)
         if value == UNSET_VALUE and defaultValue == REQUIRED_VALUE:
             missing.append(key)
         elif value == UNSET_VALUE and defaultValue:
