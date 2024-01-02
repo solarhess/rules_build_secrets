@@ -1,0 +1,12 @@
+module(
+    name="rules_build_secrets",
+    version = "0.0.0",
+    compatibility_level = 1,
+
+)
+
+bazel_dep(name = "bazel_skylib", version = "1.4.1")
+
+rules_build_secrets = use_extension("@rules_build_secrets//lib:extensions.bzl", "rules_build_secrets")
+rules_build_secrets.options()
+use_repo(rules_build_secrets, "env")

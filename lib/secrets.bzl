@@ -10,8 +10,8 @@ UNSET_VALUE = "______UNSET______"
 REQUIRED_VALUE = "<REQUIRED>"
 
 def _environment_secrets_impl(repository_ctx):
-    entries = repository_ctx.attr.entries
     env = repository_ctx.os.environ
+    entries = repository_ctx.attr.entries
 
     lines = ["# Generated - do not modify"]
     missing = []
@@ -38,7 +38,14 @@ def _environment_secrets_impl(repository_ctx):
     repository_ctx.file("secrets.bzl", secrets_file)
     repository_ctx.file("BUILD.bazel", BUILD_BZL_CONTENTS)
 
-
+the_new_rule = repository_rule(
+    implementation = _environment_secrets_impl,
+    attrs = {
+        "entries": attr.string_dict(
+            default = {},
+        ),
+    },
+)
 """
 
 Explicitly import secrets from the environment into the workspace. The 'entries'
@@ -69,14 +76,6 @@ Then in build scripts you can reference these by importing a custom bzl file.
     sample_rule(arg=MAVEN_REPO_USER)
 
 """
-def environment_secrets(name, entries): 
-    the_new_rule = repository_rule(
-        implementation = _environment_secrets_impl,
-        attrs = {
-            "entries": attr.string_dict(
-                default = entries,
-            ),
-        },
-        environ = entries.keys(),
-    )
-    the_new_rule(name = name)
+def environment_secrets(name, entries):
+
+    the_new_rule(name = name, entries = entries)
